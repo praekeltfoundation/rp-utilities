@@ -98,10 +98,14 @@ def list_events(ctx, campaign=None):
 def create_events(ctx, csv_file, campaign):
     """This command loads Campaign Events from the given CSV file and POSTs them
     to the given RapidPro API with the supplied Campaign UUID."""
+    click.echo("Starting Campaign Event creation...")
     try:
         create_campaign_events(csv_file, campaign, ctx.obj)
     except TembaConnectionError as exc:
         click.echo("Cannot connect to supplied RapidPro API, import aborted")
     except TembaBadRequestError as exc:
         click.echo("A RapidPro error has occured, import aborted")
-        click.echo(exc.message)
+        click.echo(str(exc))
+        return
+
+    click.echo("Completed successfully")

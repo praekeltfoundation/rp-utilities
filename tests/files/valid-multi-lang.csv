@@ -1,0 +1,4 @@
+relative_to,offset,unit,delivery_hour,lang_code,message,lang_code,message,lang_code,message
+edd,-1,days,8,eng,One,ita,Uno,fre,Un
+edd,0,days,8,eng,Two,ita,Duo,fre,Deux
+edd,1,days,8,eng,Three,ita,Tre,fre,Trois

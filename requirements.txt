@@ -1,0 +1,2 @@
+# Dependencies specified in setup.py
+-e .

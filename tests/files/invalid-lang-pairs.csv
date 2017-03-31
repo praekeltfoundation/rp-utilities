@@ -1,0 +1,4 @@
+relative_to,offset,unit,delivery_hour,lang_code,message,lang_code2
+edd,-1,days,8,eng,Test Message One,ita
+edd,0,days,8,eng,Test Message Two,ita
+edd,1,days,8,eng,Test Message Three,ita

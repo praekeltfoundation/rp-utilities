@@ -56,17 +56,30 @@ def get_campaign_events_from_csv(file_name):
             yield event
 
 
+class APIError(Exception):
+    """Raised when an error occured with the RapidPro API."""
+    def __init__(self, message, extra_data):
+        super(APIError, self).__init__(message)
+        self.extra_data = extra_data
+
+
 def create_campaign_events(file_name, campaign_id, client):
     campaign_id = str(campaign_id)
-    for event in get_campaign_events_from_csv(file_name):
-        client.create_campaign_event(
-            campaign_id,
-            relative_to=event.relative_to,
-            offset=event.offset,
-            unit=event.unit,
-            delivery_hour=event.delivery_hour,
-            message=event.message
-        )
+    for idx, event in enumerate(get_campaign_events_from_csv(file_name)):
+        try:
+            client.create_campaign_event(
+                campaign_id,
+                relative_to=event.relative_to,
+                offset=event.offset,
+                unit=event.unit,
+                delivery_hour=event.delivery_hour,
+                message=event.message
+            )
+        except TembaConnectionError as exc:
+            raise APIError("Cannot connect to supplied RapidPro API, import aborted",
+                           extra_data={'row': idx, 'error': str(exc)})
+        except TembaBadRequestError as exc:
+            raise APIError("A RapidPro error has occured, import aborted", extra_data={'row': idx, 'error': str(exc)})
 
 
 # -- CLI commands
@@ -101,11 +114,9 @@ def create_events(ctx, csv_file, campaign):
     click.echo("Starting Campaign Event creation...")
     try:
         create_campaign_events(csv_file, campaign, ctx.obj)
-    except TembaConnectionError as exc:
+    except APIError as exc:
         click.echo("Cannot connect to supplied RapidPro API, import aborted")
-    except TembaBadRequestError as exc:
-        click.echo("A RapidPro error has occured, import aborted")
-        click.echo(str(exc))
-        return
-
-    click.echo("Completed successfully")
+        click.echo(click.style(str(exc), fg='red'))
+        click.echo(click.style(str(exc.extra_data), fg='red'))
+    else:
+        click.echo("Completed successfully")

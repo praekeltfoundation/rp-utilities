@@ -2,7 +2,7 @@ import click
 
 from temba_client.v2 import TembaClient
 
-from .campaigns import list_campaigns, list_events, create_events
+from .campaigns import list_campaigns, list_events, delete_events, create_events, show_event
 
 
 class Context(object):
@@ -36,3 +36,5 @@ def events(ctx):
 campaigns.add_command(list_campaigns, name='list')
 events.add_command(create_events, name='create')
 events.add_command(list_events, name='list')
+events.add_command(delete_events, name='purge')
+events.add_command(show_event, name='show')

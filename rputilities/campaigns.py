@@ -103,6 +103,19 @@ def list_events(ctx, campaign=None):
         click.echo("{0} - {1}".format(event.uuid, event.offset))
 
 
+@click.command(short_help="Delete all Campaign Events")
+@click.argument('campaign', type=click.UUID, required=True)
+@click.pass_context
+def delete_events(ctx, campaign=None):
+    events = ctx.obj.get_campaign_events(campaign=campaign)
+    click.echo("Deleting Campaign Events...")
+    counter = 0
+    for event in events.all():
+        ctx.obj.delete_campaign_event(event)
+        counter = counter + 1
+    click.echo("Deleted {} event{}".format(counter, "s" if counter > 1 else ""))
+
+
 @click.command(short_help="Create Campaign Events from CSV.")
 @click.option('--csv', 'csv_file', required=True, type=click.Path(exists=True, dir_okay=False),
               help="The CSV file to create Campaign Events from")
@@ -120,3 +133,22 @@ def create_events(ctx, csv_file, campaign):
         click.echo(click.style(str(exc.extra_data), fg='red'))
     else:
         click.echo("Completed successfully")
+
+
+@click.command(short_help="Show Campaign Events")
+@click.argument('event', type=click.UUID, required=True)
+@click.pass_context
+def show_event(ctx, event=None):
+    event = ctx.obj.get_campaign_events(uuid=event).first()
+    click.echo("Campaign Event:")
+    click.echo({
+        'uuid': event.uuid,
+        'campaign': event.campaign,
+        'relative_to': event.relative_to,
+        'offset': event.offset,
+        'unit': event.unit,
+        'delivery_hour': event.delivery_hour,
+        'message': event.message,
+        'flow': event.flow,
+        'created_on': event.created_on,
+    })

@@ -36,15 +36,15 @@ class TestGetCampaignEventsFromCsv:
         assert list(events) == [
             campaigns.CampaignEvent(
                 relative_to='edd', offset=-1, unit='days',
-                delivery_hour=8, message='{"eng": "One", "fre": "Un", "ita": "Uno"}'
+                delivery_hour=8, message={"eng": "One", "fre": "Un", "ita": "Uno"}
             ),
             campaigns.CampaignEvent(
                 relative_to='edd', offset=0, unit='days',
-                delivery_hour=8, message='{"eng": "Two", "fre": "Deux", "ita": "Duo"}'
+                delivery_hour=8, message={"eng": "Two", "fre": "Deux", "ita": "Duo"}
             ),
             campaigns.CampaignEvent(
                 relative_to='edd', offset=1, unit='days',
-                delivery_hour=8, message='{"eng": "Three", "fre": "Trois", "ita": "Tre"}'
+                delivery_hour=8, message={"eng": "Three", "fre": "Trois", "ita": "Tre"}
             ),
         ]
 

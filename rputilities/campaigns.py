@@ -1,5 +1,4 @@
 import io
-import json
 from backports import csv
 
 import attr
@@ -52,7 +51,7 @@ def get_campaign_events_from_csv(file_name):
                 translations = zip(iterator, iterator)
                 for code, msg in translations:
                     full_message[code.strip()] = msg.strip()
-                event.message = json.dumps(full_message, sort_keys=True)
+                event.message = full_message
             yield event
 
 
